@@ -1005,7 +1005,7 @@ class Jira(AtlassianRestAPI):
 
         return self.get(url, params=params)
 
-    def epic_issues(self, epic, fields="*all", expand=None):
+    def epic_issues(self, epic, fields="*all", start=0, limit=None, expand=None):
         """
         Given an epic return all child issues
         By default, all fields are returned in this get-issue resource
@@ -1020,6 +1020,10 @@ class Jira(AtlassianRestAPI):
         base_url = self.resource_url("epic", api_root="rest/agile", api_version="1.0")
         url = "{base_url}/{key}/issue?fields={fields}".format(base_url=base_url, key=epic, fields=fields)
         params = {}
+        if start is not None:
+            params["startAt"] = int(start)
+        if limit is not None:
+            params["maxResults"] = int(limit)
         if expand:
             params["expand"] = expand
         return self.get(url, params=params)
